@@ -1,17 +1,17 @@
 /******************************************************************************
  *  @file    Dio.c
- *  @brief   Definition of Digital Input/Output (DIO) control functions.
+ *  @brief   Định nghĩa các hàm điều khiển Đầu vào/Đầu ra số (DIO).
  *
- *  @details This file contains the implementation of DIO control functions, 
- *           responsible for configuring and controlling the digital pins of 
- *           the microcontroller. The DIO module enables reading and writing 
- *           of digital signals in compliance with the AUTOSAR standard.
+ *  @details File này chứa phần triển khai các hàm điều khiển DIO, chịu trách 
+ *           nhiệm cấu hình và điều khiển các chân số của vi điều khiển. 
+ *           Module DIO cho phép đọc và ghi các tín hiệu số, tuân thủ tiêu chuẩn AUTOSAR.
  *  
  *  @version 1.0
  *  @date    2024-11-01
  *
- *  @section Author
- *           Tong Xuan Hoang
+ *  @section Tác giả
+ *           Tống Xuân Hoàng
+ *
  ******************************************************************************/
 
 #include "Dio.h"

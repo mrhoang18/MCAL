@@ -1,17 +1,16 @@
 /******************************************************************************
  *  @file    Dio.h
- *  @brief   Interface for Digital Input/Output (DIO) functions.
+ *  @brief   Giao diện cho các hàm Đầu vào/Đầu ra số (DIO).
  *
- *  @details This header file provides the function prototypes and necessary 
- *           definitions for the Digital Input/Output (DIO) module, allowing 
- *           configuration and control of digital pins as specified by the 
- *           AUTOSAR standard.
+ *  @details File header này cung cấp các khai báo hàm và định nghĩa cần thiết
+ *           cho module Đầu vào/Đầu ra số (DIO), cho phép cấu hình và điều khiển 
+ *           các chân số theo tiêu chuẩn AUTOSAR.
  *  
  *  @version 1.0
- *  @date    2024-10-10
+ *  @date    2024-11-01
  *
- *  @section Author
- *           Tong Xuan Hoang
+ *  @section Tác giả
+ *           Tống Xuân Hoàng
  ******************************************************************************/
 
 #ifndef DIO_H
