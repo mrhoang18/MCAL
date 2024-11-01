@@ -23,13 +23,20 @@
 #include "stm32f10x_gpio.h"
 
 /**
-  * @brief  Reads the current signal level (HIGH or LOW) from the specified GPIO pin.
-  * @param  ChannelId: Specifies the unique ID of the GPIO pin, which contains information about the port and pin number.
-  *                     - For example: ChannelId 0�15 corresponds to GPIOA pins 0�15,
-  *                       ChannelId 16�31 corresponds to GPIOB pins 0�15, and so on.
-  * @retval Dio_LevelType: Returns the signal level of the specified pin.
-  *                - STD_HIGH: The pin is at a high level.
-  *                - STD_LOW: The pin is at a low level.
+  * @brief  Đọc mức tín hiệu (CAO hoặc THẤP) của chân GPIO được chỉ định.
+  * 
+  * @param  ChannelId: ID duy nhất của chân GPIO, mã hóa cả thông tin về cổng (port) và chân (pin).
+  *                    Mỗi nhóm 16 ChannelId tương ứng với một cổng:
+  *                    - ChannelId từ 0-15: tương ứng các chân 0-15 của GPIOA
+  *                    - ChannelId từ 16-31: tương ứng các chân 0-15 của GPIOB
+  *                    - ChannelId từ 32-47: tương ứng các chân 0-15 của GPIOC
+  *
+  * @retval Dio_LevelType: Trả về mức tín hiệu hiện tại của chân GPIO chỉ định.
+  *                    - STD_HIGH: Chân ở mức tín hiệu cao.
+  *                    - STD_LOW: Chân ở mức tín hiệu thấp.
+  *
+  * @note   Nếu số cổng không hợp lệ, hàm sẽ trả về STD_LOW theo mặc định.
+  * 
   */
 Dio_LevelType Dio_ReadChannel(Dio_ChannelType ChannelId) 
 {
@@ -74,14 +81,20 @@ Dio_LevelType Dio_ReadChannel(Dio_ChannelType ChannelId)
 }
 
 /**
-  * @brief  Writes a signal level (HIGH or LOW) to the specified GPIO pin.
-  * @param  ChannelId: Specifies the unique ID of the GPIO pin, which includes information about the port and pin number.
-  *                     - For example: ChannelId 0�15 corresponds to GPIOA pins 0�15,
-  *                       ChannelId 16�31 corresponds to GPIOB pins 0�15, and so on.
-  * @param  Level: Specifies the level to be written to the GPIO pin.
-  *                - STD_HIGH: Sets the pin to a high level.
-  *                - STD_LOW: Sets the pin to a low level.
-  * @retval None
+  * @brief  Đặt mức tín hiệu (CAO hoặc THẤP) cho chân GPIO được chỉ định.
+  * 
+  * @param  ChannelId: ID duy nhất của chân GPIO, bao gồm thông tin về cổng và số chân:
+  *                    - ChannelId từ 0-15: Tương ứng với các chân 0-15 của GPIOA.
+  *                    - ChannelId từ 16-31: Tương ứng với các chân 0-15 của GPIOB.
+  *                    - ChannelId từ 32-47: Tương ứng với các chân 0-15 của GPIOC.
+  *
+  * @param  Level: Mức tín hiệu cần đặt cho chân GPIO.
+  *                - STD_HIGH: Đặt chân ở mức tín hiệu cao.
+  *                - STD_LOW: Đặt chân ở mức tín hiệu thấp.
+  *
+  * @retval Không có.
+  *
+  * @note   Nếu `ChannelId` chứa cổng không hợp lệ, hàm sẽ thoát mà không thực hiện thay đổi nào.
   */
 void Dio_WriteChannel(Dio_ChannelType ChannelId, Dio_LevelType Level)
 {
@@ -122,17 +135,21 @@ void Dio_WriteChannel(Dio_ChannelType ChannelId, Dio_LevelType Level)
     }
 }
 
-
 /**
-  * @brief  Reads the signal levels of all pins in the specified GPIO port.
-  * @param  PortId: Specifies the unique ID of the GPIO port.
-  *                     - 0: GPIOA
-  *                     - 1: GPIOB
-  *                     - 2: GPIOC
-  *                     - and so on, depending on the MCU configuration.
-  * @retval Dio_PortLevelType: Returns the level of all pins in the port.
-  *                - Each bit in the returned value corresponds to the level of a specific pin.
-  *                - Bit value '1' indicates HIGH, '0' indicates LOW.
+  * @brief  Đọc mức tín hiệu của tất cả các chân trong cổng GPIO được chỉ định.
+  * 
+  * @param  PortId: ID duy nhất của cổng GPIO.
+  *                 - 0: GPIOA
+  *                 - 1: GPIOB
+  *                 - 2: GPIOC
+  *                 - Thêm 3,4,...: GPIOD...G, tùy thuộc vào cấu hình của MCU.
+  *
+  * @retval Dio_PortLevelType: Mức tín hiệu kết hợp của tất cả các chân trong cổng được chỉ định.
+  *                 - Mỗi bit trong giá trị trả về tương ứng với mức tín hiệu của một chân trong cổng:
+  *                   - Bit '1': CAO (chân ở mức tín hiệu cao).
+  *                   - Bit '0': THẤP (chân ở mức tín hiệu thấp).
+  *
+  * @note   Nếu `PortId` không hợp lệ, hàm sẽ trả về 0.
   */
 Dio_PortLevelType Dio_ReadPort(Dio_PortType PortId)
 {
@@ -161,6 +178,23 @@ Dio_PortLevelType Dio_ReadPort(Dio_PortType PortId)
     return portLevel;
 }
 
+/**
+  * @brief  Ghi mức tín hiệu chỉ định lên tất cả các chân trong cổng GPIO được chỉ định.
+  * 
+  * @param  PortId: ID duy nhất của cổng GPIO.
+  *                 - 0: GPIOA
+  *                 - 1: GPIOB
+  *                 - 2: GPIOC
+  *                 - và tiếp tục tùy thuộc vào cấu hình của MCU.
+  *
+  * @param  Level: Mức tín hiệu cần ghi lên tất cả các chân trong cổng.
+  *                - Mỗi bit trong `Level` tương ứng với mức tín hiệu mong muốn của một chân cụ thể trong cổng:
+  *                  Bit '1' đặt chân ở mức CAO, và bit '0' đặt chân ở mức THẤP.
+  *
+  * @retval Không có giá trị trả về.
+  *
+  * @note   Nếu `PortId` không hợp lệ, hàm sẽ thoát mà không thay đổi trạng thái chân nào.
+  */
 void Dio_WritePort(Dio_PortType PortId, Dio_PortLevelType Level)
 {
     GPIO_TypeDef* GPIOx;
@@ -185,8 +219,20 @@ void Dio_WritePort(Dio_PortType PortId, Dio_PortLevelType Level)
     GPIO_Write(GPIOx, Level);
 }
 
-
-
+/**
+  * @brief  Đọc mức tín hiệu của một nhóm chân cụ thể trong một cổng GPIO.
+  * 
+  * @param  ChannelGroupIdPtr: Con trỏ tới cấu trúc `Dio_ChannelGroupType` chứa thông tin
+  *                             về cổng, mặt nạ, và độ lệch của nhóm chân.
+  *                             - `port`: Số hiệu của cổng GPIO (ví dụ: 0 là GPIOA, 1 là GPIOB).
+  *                             - `mask`: Mặt nạ bit xác định các chân cụ thể trong cổng.
+  *                             - `offset`: Độ lệch bit chỉ vị trí của nhóm chân trong cổng.
+  *
+  * @retval Dio_PortLevelType: Mức tín hiệu của nhóm chân được chỉ định, sau khi áp dụng mặt nạ
+  *                            và dịch theo độ lệch.
+  *
+  * @note   Nếu cổng được chỉ định trong `ChannelGroupIdPtr` không hợp lệ, hàm sẽ trả về 0.
+  */
 Dio_PortLevelType Dio_ReadChannelGroup(const Dio_ChannelGroupType *ChannelGroupIdPtr)
 {
     GPIO_TypeDef* GPIOx;
@@ -219,17 +265,20 @@ Dio_PortLevelType Dio_ReadChannelGroup(const Dio_ChannelGroupType *ChannelGroupI
 }
 
 /**
-  * @brief  Writes a specified level to a group of adjacent pins in a GPIO port.
-  * @param  ChannelGroupIdPtr: Pointer to the Dio_ChannelGroupType structure, which contains:
-  *                            - port: The GPIO port identifier (e.g., 0 for GPIOA, 1 for GPIOB).
-  *                            - mask: Bitmask specifying the pins within the port that belong to the group.
-  *                            - offset: The starting bit position of the pin group within the port.
-  * @param  Level: The level to be written to the specified group of pins. Each bit in Level corresponds
-  *                to a specific pin in the group, shifted according to the offset.
-  * @retval None
+  * @brief  Ghi mức tín hiệu chỉ định vào một nhóm các chân liên tiếp trong một cổng GPIO.
   * 
-  * @note   This function writes a level to a subset of contiguous pins within a port without affecting 
-  *         the other pins outside of this group.
+  * @param  ChannelGroupIdPtr: Con trỏ tới cấu trúc `Dio_ChannelGroupType`, chứa:
+  *                            - `port`: ID của cổng GPIO (ví dụ: 0 cho GPIOA, 1 cho GPIOB).
+  *                            - `mask`: Mặt nạ bit xác định các chân thuộc nhóm trong cổng.
+  *                            - `offset`: Vị trí bit bắt đầu của nhóm chân trong cổng.
+  *
+  * @param  Level: Mức tín hiệu cần ghi vào nhóm chân được chỉ định. Mỗi bit trong `Level` 
+  *                tương ứng với một chân trong nhóm, được căn chỉnh theo `offset`.
+  *
+  * @retval Không có giá trị trả về.
+  *
+  * @note   Hàm này chỉ cập nhật mức tín hiệu cho nhóm các chân liên tiếp trong cổng, 
+  *         không ảnh hưởng đến các chân khác ngoài nhóm.
   */
 void Dio_WriteChannelGroup(const Dio_ChannelGroupType *ChannelGroupIdPtr, Dio_PortLevelType Level)
 {
@@ -265,8 +314,23 @@ void Dio_WriteChannelGroup(const Dio_ChannelGroupType *ChannelGroupIdPtr, Dio_Po
     GPIO_Write(GPIOx, (uint16_t)portValue);
 }
 
+/**
+  * @brief  Lấy thông tin phiên bản của module DIO.
+  * 
+  * @param  versioninfo: Con trỏ tới cấu trúc `Std_VersionInfoType` nơi thông tin phiên bản
+  *                      sẽ được lưu trữ.
+  *                      - `vendorID`: ID nhà cung cấp của module DIO.
+  *                      - `moduleID`: ID của module DIO.
+  *                      - `sw_major_version`: Số phiên bản chính của phần mềm.
+  *                      - `sw_minor_version`: Số phiên bản phụ của phần mềm.
+  *                      - `sw_patch_version`: Số phiên bản vá lỗi của phần mềm.
+  *
+  * @retval Không có giá trị trả về.
+  *
+  * @note   Nếu `versioninfo` là một con trỏ null, hàm sẽ không thực hiện hành động nào.
+  *         Đảm bảo rằng `versioninfo` hợp lệ trước khi gọi hàm này.
+  */
 #define NULL_PTR          ((void *)0)
-	
 void Dio_GetVersionInfo(Std_VersionInfoType *versioninfo)
 {
 	if (versioninfo != NULL_PTR)
@@ -285,16 +349,18 @@ void Dio_GetVersionInfo(Std_VersionInfoType *versioninfo)
 }
 
 /**
-  * @brief  Toggles (flips) the state of a specified DIO channel.
-  *         If the channel is currently HIGH, it will be set to LOW, and vice versa.
-  * @param  ChannelId: The unique identifier of the DIO channel to be toggled.
-  * @retval Dio_LevelType: Returns the new state of the channel after toggling.
-  *                         - STD_HIGH: The channel is now set to HIGH.
-  *                         - STD_LOW: The channel is now set to LOW.
+  * @brief  Đảo trạng thái hiện tại của kênh DIO được chỉ định.
+  *         Nếu kênh hiện tại đang ở mức CAO, nó sẽ được đặt về mức THẤP và ngược lại.
   * 
-  * @note   This function reads the current state of the specified DIO channel, 
-  *         flips its state, writes the new state back to the channel, and returns 
-  *         the new state for further use.
+  * @param  ChannelId: Định danh duy nhất của kênh DIO cần đảo trạng thái.
+  *
+  * @retval Dio_LevelType: Trạng thái mới của kênh sau khi được đảo.
+  *                        - `STD_HIGH`: Kênh hiện được đặt ở mức CAO.
+  *                        - `STD_LOW`: Kênh hiện được đặt ở mức THẤP.
+  *
+  * @note   Hàm này đọc trạng thái hiện tại của kênh DIO được chỉ định, đảo trạng thái,
+  *         ghi lại trạng thái mới vào kênh và trả về trạng thái mới để sử dụng sau này. 
+  *         Thao tác này không ảnh hưởng đến các kênh khác.
   */
 Dio_LevelType Dio_FlipChannel(Dio_ChannelType ChannelId)
 {

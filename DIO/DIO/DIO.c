@@ -23,13 +23,21 @@
 #include "stm32f10x_gpio.h"
 
 /**
-  * @brief  Reads the current signal level (HIGH or LOW) from the specified GPIO pin.
-  * @param  ChannelId: Specifies the unique ID of the GPIO pin, which contains information about the port and pin number.
-  *                     - For example: ChannelId 0->15 corresponds to GPIOA pins 0->15,
-  *                       ChannelId 16->31 corresponds to GPIOB pins 0->15, and so on.
-  * @retval Dio_LevelType: Returns the signal level of the specified pin.
-  *                - STD_HIGH: The pin is at a high level.
-  *                - STD_LOW: The pin is at a low level.
+  * @brief  Reads the signal level (HIGH or LOW) of a specified GPIO pin.
+  * 
+  * @param  ChannelId: The unique identifier for the GPIO pin, which encodes 
+  *                    both the port and pin number. Each set of 16 ChannelIds 
+  *                    maps to a specific port:
+  *                    - ChannelId 0-15: GPIOA pins 0-15
+  *                    - ChannelId 16-31: GPIOB pins 0-15
+  *                    - ChannelId 32-47: GPIOC pins 0-15
+  *
+  * @retval Dio_LevelType: The current level of the specified GPIO pin.
+  *                    - STD_HIGH: Pin is at a high signal level.
+  *                    - STD_LOW: Pin is at a low signal level.
+  *
+  * @note   If an invalid port number is provided, the function will return STD_LOW by default.
+  * 
   */
 Dio_LevelType Dio_ReadChannel(Dio_ChannelType ChannelId) 
 {
@@ -74,14 +82,22 @@ Dio_LevelType Dio_ReadChannel(Dio_ChannelType ChannelId)
 }
 
 /**
-  * @brief  Writes a signal level (HIGH or LOW) to the specified GPIO pin.
-  * @param  ChannelId: Specifies the unique ID of the GPIO pin, which includes information about the port and pin number.
-  *                     - For example: ChannelId 0->15 corresponds to GPIOA pins 0->15,
-  *                       ChannelId 16->31 corresponds to GPIOB pins 0->15, and so on.
-  * @param  Level: Specifies the level to be written to the GPIO pin.
+  * @brief  Sets the specified GPIO pin to a signal level (HIGH or LOW).
+  * 
+  * @param  ChannelId: Unique identifier for the GPIO pin, which includes the port 
+  *                    and pin number:
+  *                    - ChannelId 0-15: Maps to GPIOA pins 0-15.
+  *                    - ChannelId 16-31: Maps to GPIOB pins 0-15.
+  *                    - ChannelId 32-47: Maps to GPIOC pins 0-15.
+  *
+  * @param  Level: Signal level to set on the GPIO pin.
   *                - STD_HIGH: Sets the pin to a high level.
   *                - STD_LOW: Sets the pin to a low level.
+  *
   * @retval None
+  *
+  * @note   If an invalid port is specified in ChannelId, the function exits without 
+  *         modifying any pin state.
   */
 void Dio_WriteChannel(Dio_ChannelType ChannelId, Dio_LevelType Level)
 {
@@ -122,17 +138,21 @@ void Dio_WriteChannel(Dio_ChannelType ChannelId, Dio_LevelType Level)
     }
 }
 
-
 /**
   * @brief  Reads the signal levels of all pins in the specified GPIO port.
-  * @param  PortId: Specifies the unique ID of the GPIO port.
-  *                     - 0: GPIOA
-  *                     - 1: GPIOB
-  *                     - 2: GPIOC
-  *                     - and so on, depending on the MCU configuration.
-  * @retval Dio_PortLevelType: Returns the level of all pins in the port.
-  *                - Each bit in the returned value corresponds to the level of a specific pin.
-  *                - Bit value '1' indicates HIGH, '0' indicates LOW.
+  * 
+  * @param  PortId: Unique identifier of the GPIO port.
+  *                 - 0: GPIOA
+  *                 - 1: GPIOB
+  *                 - 2: GPIOC
+  *                 - and so forth, depending on the MCU configuration.
+  *
+  * @retval Dio_PortLevelType: The combined signal levels of all pins in the specified port.
+  *                 - Each bit in the returned value represents the level of a pin in the port:
+  *                   - Bit '1': HIGH (pin at high level).
+  *                   - Bit '0': LOW (pin at low level).
+  *
+  * @note   If an invalid PortId is specified, the function returns 0.
   */
 Dio_PortLevelType Dio_ReadPort(Dio_PortType PortId)
 {
@@ -161,6 +181,23 @@ Dio_PortLevelType Dio_ReadPort(Dio_PortType PortId)
     return portLevel;
 }
 
+/**
+  * @brief  Writes a specified signal level to all pins in the specified GPIO port.
+  * 
+  * @param  PortId: Unique identifier for the GPIO port.
+  *                 - 0: GPIOA
+  *                 - 1: GPIOB
+  *                 - 2: GPIOC
+  *                 - and so on, depending on the MCU configuration.
+  *
+  * @param  Level: Signal level to be written to all pins in the port.
+  *                - Each bit in `Level` represents the desired level for a specific pin in the port.
+  *                  Bit '1' sets the pin to HIGH, and bit '0' sets it to LOW.
+  *
+  * @retval None
+  *
+  * @note   If `PortId` is invalid, the function exits without modifying any pin state.
+  */
 void Dio_WritePort(Dio_PortType PortId, Dio_PortLevelType Level)
 {
     GPIO_TypeDef* GPIOx;
@@ -185,8 +222,20 @@ void Dio_WritePort(Dio_PortType PortId, Dio_PortLevelType Level)
     GPIO_Write(GPIOx, Level);
 }
 
-
-
+/**
+  * @brief  Reads the signal level of a specific group of pins within a GPIO port.
+  * 
+  * @param  ChannelGroupIdPtr: Pointer to the `Dio_ChannelGroupType` structure that specifies 
+  *                             the port, mask, and offset for the pin group.
+  *                             - `port`: The GPIO port number (e.g., 0 for GPIOA, 1 for GPIOB).
+  *                             - `mask`: The bit mask defining the specific pins in the port.
+  *                             - `offset`: The bit offset indicating the position of the group within the port.
+  *
+  * @retval Dio_PortLevelType: The signal level of the specified pin group, after applying 
+  *                            the mask and shifting by the offset.
+  *
+  * @note   If the port specified in `ChannelGroupIdPtr` is invalid, the function returns 0.
+  */
 Dio_PortLevelType Dio_ReadChannelGroup(const Dio_ChannelGroupType *ChannelGroupIdPtr)
 {
     GPIO_TypeDef* GPIOx;
@@ -220,16 +269,19 @@ Dio_PortLevelType Dio_ReadChannelGroup(const Dio_ChannelGroupType *ChannelGroupI
 
 /**
   * @brief  Writes a specified level to a group of adjacent pins in a GPIO port.
-  * @param  ChannelGroupIdPtr: Pointer to the Dio_ChannelGroupType structure, which contains:
-  *                            - port: The GPIO port identifier (e.g., 0 for GPIOA, 1 for GPIOB).
-  *                            - mask: Bitmask specifying the pins within the port that belong to the group.
-  *                            - offset: The starting bit position of the pin group within the port.
-  * @param  Level: The level to be written to the specified group of pins. Each bit in Level corresponds
-  *                to a specific pin in the group, shifted according to the offset.
-  * @retval None
   * 
-  * @note   This function writes a level to a subset of contiguous pins within a port without affecting 
-  *         the other pins outside of this group.
+  * @param  ChannelGroupIdPtr: Pointer to the `Dio_ChannelGroupType` structure, which specifies:
+  *                            - `port`: GPIO port identifier (e.g., 0 for GPIOA, 1 for GPIOB).
+  *                            - `mask`: Bitmask defining the pins within the port that belong to the group.
+  *                            - `offset`: Starting bit position of the pin group within the port.
+  *
+  * @param  Level: The signal level to write to the specified group of pins. Each bit in `Level` corresponds
+  *                to a specific pin in the group, aligned based on the offset.
+  *
+  * @retval None
+  *
+  * @note   This function updates only the specified group of contiguous pins within a port, 
+  *         leaving other pins in the port unaffected.
   */
 void Dio_WriteChannelGroup(const Dio_ChannelGroupType *ChannelGroupIdPtr, Dio_PortLevelType Level)
 {
@@ -265,8 +317,23 @@ void Dio_WriteChannelGroup(const Dio_ChannelGroupType *ChannelGroupIdPtr, Dio_Po
     GPIO_Write(GPIOx, (uint16_t)portValue);
 }
 
-#define NULL_PTR          ((void *)0)
-	
+/**
+  * @brief  Retrieves the version information of the DIO module.
+  * 
+  * @param  versioninfo: Pointer to the `Std_VersionInfoType` structure where version 
+  *                      information will be stored.
+  *                      - `vendorID`: Vendor ID of the DIO module.
+  *                      - `moduleID`: Module ID of the DIO module.
+  *                      - `sw_major_version`: Major version number of the software.
+  *                      - `sw_minor_version`: Minor version number of the software.
+  *                      - `sw_patch_version`: Patch version number of the software.
+  *
+  * @retval None
+  *
+  * @note   If `versioninfo` is a null pointer, no action is performed. Ensure that 
+  *         `versioninfo` is valid before calling this function.
+  */
+#define NULL_PTR          ((void *)0)	
 void Dio_GetVersionInfo(Std_VersionInfoType *versioninfo)
 {
 	if (versioninfo != NULL_PTR)
@@ -285,16 +352,18 @@ void Dio_GetVersionInfo(Std_VersionInfoType *versioninfo)
 }
 
 /**
-  * @brief  Toggles (flips) the state of a specified DIO channel.
-  *         If the channel is currently HIGH, it will be set to LOW, and vice versa.
-  * @param  ChannelId: The unique identifier of the DIO channel to be toggled.
-  * @retval Dio_LevelType: Returns the new state of the channel after toggling.
-  *                         - STD_HIGH: The channel is now set to HIGH.
-  *                         - STD_LOW: The channel is now set to LOW.
+  * @brief  Toggles (flips) the current state of a specified DIO channel.
+  *         If the channel is currently set to HIGH, it will be set to LOW, and vice versa.
   * 
-  * @note   This function reads the current state of the specified DIO channel, 
-  *         flips its state, writes the new state back to the channel, and returns 
-  *         the new state for further use.
+  * @param  ChannelId: Unique identifier for the DIO channel to be toggled.
+  *
+  * @retval Dio_LevelType: The new state of the channel after toggling.
+  *                        - `STD_HIGH`: The channel is now set to HIGH.
+  *                        - `STD_LOW`: The channel is now set to LOW.
+  *
+  * @note   This function reads the current state of the specified DIO channel,
+  *         flips the state, writes the new state back to the channel, and returns 
+  *         the new state for further use. This operation does not affect other channels.
   */
 Dio_LevelType Dio_FlipChannel(Dio_ChannelType ChannelId)
 {
