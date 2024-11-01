@@ -3,11 +3,11 @@
 <title>Static Call Graph - [.\Objects\DIO.axf]</title></head>
 <body><HR>
 <H1>Static Call Graph for image .\Objects\DIO.axf</H1><HR>
-<BR><P>#&#060CALLGRAPH&#062# ARM Linker, 5060061: Last Updated: Fri Nov 01 01:34:05 2024
+<BR><P>#&#060CALLGRAPH&#062# ARM Linker, 5060061: Last Updated: Fri Nov 01 15:43:29 2024
 <BR><P>
 <H3>Maximum Stack Usage =         48 bytes + Unknown(Functions without stacksize, Cycles, Untraceable Function Pointers)</H3><H3>
 Call chain for Maximum Stack Depth:</H3>
-__rt_entry_main &rArr; main &rArr; Dio_FlipChannel &rArr; Dio_WriteChannel
+__rt_entry_main &rArr; main &rArr; Dio_ToggleChannel &rArr; Dio_WriteChannel
 <P>
 <H3>
 Functions with no stack information
@@ -198,7 +198,7 @@ Global Symbols
 
 <P><STRONG><a name="[42]"></a>__rt_entry_main</STRONG> (Thumb, 0 bytes, Stack size unknown bytes, __rtentry2.o(.ARM.Collect$$rtentry$$0000000D))
 <BR><BR>[Stack]<UL><LI>Max Depth = 48 + Unknown Stack Size
-<LI>Call Chain = __rt_entry_main &rArr; main &rArr; Dio_FlipChannel &rArr; Dio_WriteChannel
+<LI>Call Chain = __rt_entry_main &rArr; main &rArr; Dio_ToggleChannel &rArr; Dio_WriteChannel
 </UL>
 <BR>[Calls]<UL><LI><a href="#[43]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;main
 <LI><a href="#[44]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;exit
@@ -483,30 +483,30 @@ Global Symbols
 <BR>[Called By]<UL><LI><a href="#[4c]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Delay_Ms
 </UL>
 
-<P><STRONG><a name="[50]"></a>Dio_FlipChannel</STRONG> (Thumb, 36 bytes, Stack size 16 bytes, dio.o(i.Dio_FlipChannel))
-<BR><BR>[Stack]<UL><LI>Max Depth = 48<LI>Call Chain = Dio_FlipChannel &rArr; Dio_WriteChannel
+<P><STRONG><a name="[50]"></a>Dio_ReadChannel</STRONG> (Thumb, 106 bytes, Stack size 32 bytes, dio.o(i.Dio_ReadChannel))
+<BR><BR>[Stack]<UL><LI>Max Depth = 32<LI>Call Chain = Dio_ReadChannel
 </UL>
-<BR>[Calls]<UL><LI><a href="#[52]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Dio_WriteChannel
-<LI><a href="#[51]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Dio_ReadChannel
+<BR>[Calls]<UL><LI><a href="#[51]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;GPIO_ReadInputDataBit
+</UL>
+<BR>[Called By]<UL><LI><a href="#[52]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Dio_ToggleChannel
+</UL>
+
+<P><STRONG><a name="[52]"></a>Dio_ToggleChannel</STRONG> (Thumb, 36 bytes, Stack size 16 bytes, main.o(i.Dio_ToggleChannel))
+<BR><BR>[Stack]<UL><LI>Max Depth = 48<LI>Call Chain = Dio_ToggleChannel &rArr; Dio_WriteChannel
+</UL>
+<BR>[Calls]<UL><LI><a href="#[53]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Dio_WriteChannel
+<LI><a href="#[50]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Dio_ReadChannel
 </UL>
 <BR>[Called By]<UL><LI><a href="#[43]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;main
 </UL>
 
-<P><STRONG><a name="[51]"></a>Dio_ReadChannel</STRONG> (Thumb, 106 bytes, Stack size 32 bytes, dio.o(i.Dio_ReadChannel))
-<BR><BR>[Stack]<UL><LI>Max Depth = 32<LI>Call Chain = Dio_ReadChannel
-</UL>
-<BR>[Calls]<UL><LI><a href="#[53]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;GPIO_ReadInputDataBit
-</UL>
-<BR>[Called By]<UL><LI><a href="#[50]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Dio_FlipChannel
-</UL>
-
-<P><STRONG><a name="[52]"></a>Dio_WriteChannel</STRONG> (Thumb, 108 bytes, Stack size 32 bytes, dio.o(i.Dio_WriteChannel))
+<P><STRONG><a name="[53]"></a>Dio_WriteChannel</STRONG> (Thumb, 108 bytes, Stack size 32 bytes, dio.o(i.Dio_WriteChannel))
 <BR><BR>[Stack]<UL><LI>Max Depth = 32<LI>Call Chain = Dio_WriteChannel
 </UL>
 <BR>[Calls]<UL><LI><a href="#[54]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;GPIO_SetBits
 <LI><a href="#[55]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;GPIO_ResetBits
 </UL>
-<BR>[Called By]<UL><LI><a href="#[50]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Dio_FlipChannel
+<BR>[Called By]<UL><LI><a href="#[52]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Dio_ToggleChannel
 </UL>
 
 <P><STRONG><a name="[56]"></a>GPIO_Config</STRONG> (Thumb, 38 bytes, Stack size 8 bytes, main.o(i.GPIO_Config))
@@ -524,16 +524,16 @@ Global Symbols
 <BR>[Called By]<UL><LI><a href="#[56]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;GPIO_Config
 </UL>
 
-<P><STRONG><a name="[53]"></a>GPIO_ReadInputDataBit</STRONG> (Thumb, 18 bytes, Stack size 0 bytes, stm32f10x_gpio.o(i.GPIO_ReadInputDataBit))
-<BR><BR>[Called By]<UL><LI><a href="#[51]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Dio_ReadChannel
+<P><STRONG><a name="[51]"></a>GPIO_ReadInputDataBit</STRONG> (Thumb, 18 bytes, Stack size 0 bytes, stm32f10x_gpio.o(i.GPIO_ReadInputDataBit))
+<BR><BR>[Called By]<UL><LI><a href="#[50]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Dio_ReadChannel
 </UL>
 
 <P><STRONG><a name="[55]"></a>GPIO_ResetBits</STRONG> (Thumb, 4 bytes, Stack size 0 bytes, stm32f10x_gpio.o(i.GPIO_ResetBits))
-<BR><BR>[Called By]<UL><LI><a href="#[52]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Dio_WriteChannel
+<BR><BR>[Called By]<UL><LI><a href="#[53]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Dio_WriteChannel
 </UL>
 
 <P><STRONG><a name="[54]"></a>GPIO_SetBits</STRONG> (Thumb, 4 bytes, Stack size 0 bytes, stm32f10x_gpio.o(i.GPIO_SetBits))
-<BR><BR>[Called By]<UL><LI><a href="#[52]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Dio_WriteChannel
+<BR><BR>[Called By]<UL><LI><a href="#[53]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Dio_WriteChannel
 </UL>
 
 <P><STRONG><a name="[5c]"></a>RCC_APB1PeriphClockCmd</STRONG> (Thumb, 26 bytes, Stack size 0 bytes, stm32f10x_rcc.o(i.RCC_APB1PeriphClockCmd))
@@ -577,12 +577,12 @@ Global Symbols
 <BR><BR>[Called By]<UL><LI><a href="#[5b]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;TIM2_Config
 </UL>
 
-<P><STRONG><a name="[43]"></a>main</STRONG> (Thumb, 30 bytes, Stack size 0 bytes, main.o(i.main))
-<BR><BR>[Stack]<UL><LI>Max Depth = 48<LI>Call Chain = main &rArr; Dio_FlipChannel &rArr; Dio_WriteChannel
+<P><STRONG><a name="[43]"></a>main</STRONG> (Thumb, 26 bytes, Stack size 0 bytes, main.o(i.main))
+<BR><BR>[Stack]<UL><LI>Max Depth = 48<LI>Call Chain = main &rArr; Dio_ToggleChannel &rArr; Dio_WriteChannel
 </UL>
-<BR>[Calls]<UL><LI><a href="#[50]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Dio_FlipChannel
-<LI><a href="#[5b]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;TIM2_Config
+<BR>[Calls]<UL><LI><a href="#[5b]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;TIM2_Config
 <LI><a href="#[56]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;GPIO_Config
+<LI><a href="#[52]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Dio_ToggleChannel
 <LI><a href="#[4c]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Delay_Ms
 </UL>
 <BR>[Called By]<UL><LI><a href="#[42]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__rt_entry_main

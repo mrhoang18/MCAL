@@ -1,7 +1,7 @@
-#include "stm32f10x.h"
-#include "Dio.h"
-#include "stm32f10x_gpio.h"             // Keil::Device:StdPeriph Drivers:GPIO
+#include "stm32f10x.h"                  // Device header
 #include "stm32f10x_tim.h"              // Keil::Device:StdPeriph Drivers:TIM
+
+#include "Dio.h"
 
 void GPIO_Config(void);
 
@@ -126,9 +126,13 @@ int main(void)
 		***************************************************************************************
 		*/
 		
-		 // Toggle (flip) the state of the specified channel
-        Dio_LevelType newLevel = Dio_FlipChannel(5);
+//		 // Toggle (flip) the state of the specified channel
+//       Dio_LevelType newLevel = Dio_FlipChannel(5);
+//		 Delay_Ms(500);
+
+		Dio_ToggleChannel(7);
 		Delay_Ms(500);
+		
     }
 }
 

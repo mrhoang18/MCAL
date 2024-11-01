@@ -11,12 +11,16 @@
 #ifndef STD_TYPES_H
 #define STD_TYPES_H
 
-#define STD_TYPES_SW_MAJOR_VERSION (4U)
-#define STD_TYPES_SW_MINOR_VERSION (3U)
-#define STD_TYPES_SW_PATCH_VERSION (1U)
+/* Id for the company in the AUTOSAR
+ * For example TONG XUAN HOANG's ID = 1810 */
+#define STD_TYPES_VENDOR_ID				(1810U)
 
-#define STD_HIGH (1U) // M?c tín hi?u cao
-#define STD_LOW (0U)  // M?c tín hi?u th?p
+/*
+ * Module Version 1.0.0
+ */
+#define STD_TYPES_SW_MAJOR_VERSION		(1U)
+#define STD_TYPES_SW_MINOR_VERSION		(0U)
+#define STD_TYPES_SW_PATCH_VERSION		(0U)
 
 /* Standard AUTOSAR data types */
 typedef unsigned char uint8;   /*           0 .. 255             */
@@ -26,10 +30,11 @@ typedef signed short sint16;   /*      -32768 .. +32767          */
 typedef unsigned long uint32;  /*           0 .. 4294967295      */
 typedef signed long sint32;    /* -2147483648 .. +2147483647     */
 
-/* Standard Return Type */
+/*
+ *  Describes the standard Return Type Definitions used in the project
+ */
 typedef uint8 Std_ReturnType;
-#define E_OK ((Std_ReturnType)0x00U)
-#define E_NOT_OK ((Std_ReturnType)0x01U)
+
 
 /* Boolean data type */
 typedef uint8 boolean;
@@ -40,7 +45,10 @@ typedef uint8 boolean;
 #define FALSE (0U)
 #endif
 
-/* Version Information structure */
+/*
+ * Structure for the Version of the module.
+ * This is requested by calling <Module name>_GetVersionInfo()
+ */
 typedef struct
 {
     uint16 vendorID;
@@ -49,5 +57,12 @@ typedef struct
     uint8 sw_minor_version;
     uint8 sw_patch_version;
 } Std_VersionInfoType;
+
+#define STD_HIGH	(0x01U)						/* Standard HIGH */
+#define STD_LOW		(0x00U)						/* Standard LOW  */
+
+#define E_OK 		((Std_ReturnType)0x00U)		/* Function Return OK     */
+#define E_NOT_OK 	((Std_ReturnType)0x01U)		/* Function Return NOT OK */
+
 
 #endif /* STD_TYPES_H */
