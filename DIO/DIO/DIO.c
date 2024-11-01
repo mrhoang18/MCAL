@@ -25,8 +25,8 @@
 /**
   * @brief  Reads the current signal level (HIGH or LOW) from the specified GPIO pin.
   * @param  ChannelId: Specifies the unique ID of the GPIO pin, which contains information about the port and pin number.
-  *                     - For example: ChannelId 0�15 corresponds to GPIOA pins 0�15,
-  *                       ChannelId 16�31 corresponds to GPIOB pins 0�15, and so on.
+  *                     - For example: ChannelId 0->15 corresponds to GPIOA pins 0->15,
+  *                       ChannelId 16->31 corresponds to GPIOB pins 0->15, and so on.
   * @retval Dio_LevelType: Returns the signal level of the specified pin.
   *                - STD_HIGH: The pin is at a high level.
   *                - STD_LOW: The pin is at a low level.
@@ -76,8 +76,8 @@ Dio_LevelType Dio_ReadChannel(Dio_ChannelType ChannelId)
 /**
   * @brief  Writes a signal level (HIGH or LOW) to the specified GPIO pin.
   * @param  ChannelId: Specifies the unique ID of the GPIO pin, which includes information about the port and pin number.
-  *                     - For example: ChannelId 0�15 corresponds to GPIOA pins 0�15,
-  *                       ChannelId 16�31 corresponds to GPIOB pins 0�15, and so on.
+  *                     - For example: ChannelId 0->15 corresponds to GPIOA pins 0->15,
+  *                       ChannelId 16->31 corresponds to GPIOB pins 0->15, and so on.
   * @param  Level: Specifies the level to be written to the GPIO pin.
   *                - STD_HIGH: Sets the pin to a high level.
   *                - STD_LOW: Sets the pin to a low level.
