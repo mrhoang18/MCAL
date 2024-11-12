@@ -37,6 +37,11 @@ typedef signed short sint16;   /*      -32768 .. +32767          */
 typedef unsigned long uint32;  /*           0 .. 4294967295      */
 typedef signed long sint32;    /* -2147483648 .. +2147483647     */
 
+/**
+* The NULL define with a void pointer to zero definition.
+*/
+#define NULL ((void*)0)
+	
 /*
  *  Describes the standard Return Type Definitions used in the project
  */
