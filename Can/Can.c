@@ -17,7 +17,14 @@
 #include "Can.h"
 #include "stm32f10x_can.h"
 
-extern Can_ConfigType Can_ConfigData = 
+/**
+ * @var Can_ConfigData
+ * @brief Example configuration instance for CAN driver.
+ * 
+ * This variable contains a predefined configuration for CAN hardware and GPIO
+ * settings.
+ */
+Can_ConfigType Can_ConfigData = 
 {
     .Can_HardwareConfig = 
 	{
@@ -477,3 +484,170 @@ Std_ReturnType Can_CheckWakeup(uint8 Controller)
     return status; /**< Return the status (E_OK if awake, E_NOT_OK if in sleep) */
 }
 
+/**
+ * @brief  Retrieves the error state of the specified CAN controller.
+ * @param  ControllerId: The CAN controller to check (0 for CAN1, 1 for CAN2).
+ * @param  ErrorStatePtr: Pointer to a Can_ErrorStateType variable that will store the error state.
+ * @retval Std_ReturnType: E_OK if the error state was retrieved successfully, E_NOT_OK otherwise.
+ */
+Std_ReturnType Can_GetControllerErrorState(uint8 ControllerId, Can_ErrorStateType *ErrorStatePtr)
+{
+    CAN_TypeDef *CANx = NULL; /**< Declare pointer for CAN controller */
+
+    /* Check if the ErrorStatePtr is valid */
+    if (ErrorStatePtr == NULL)
+    {
+        return E_NOT_OK; /**< Invalid pointer, return error */
+    }
+
+    /* Select the appropriate CAN controller based on the ControllerId */
+    if (ControllerId == 0)
+    {
+        CANx = CAN1; /**< CAN1 selected */
+    }
+    else if (ControllerId == 1)
+    {
+        CANx = CAN2; /**< CAN2 selected */
+    }
+    else
+    {
+        return E_NOT_OK; /**< Invalid controller ID, return error */
+    }
+
+    /* Check the error flags in the CAN controller status register */
+    if (CANx->ESR & CAN_ESR_BOFF)
+    {
+        *ErrorStatePtr = CAN_ERRORSTATE_BUSOFF; /**< Bus-off error state */
+    }
+    else if (CANx->ESR & CAN_ESR_EPVF)
+    {
+        *ErrorStatePtr = CAN_ERRORSTATE_PASSIVE; /**< Error passive state */
+    }
+    else if (CANx->ESR & CAN_ESR_EWGF)
+    {
+        *ErrorStatePtr = CAN_ERRORSTATE_ACTIVE; /**< Error warning state */
+    }
+    else
+    {
+        return E_NOT_OK; /**< Invalid, return error */
+    }
+
+    return E_OK; /**< Return success */
+}
+
+/**
+ * @brief  Get the current mode of the specified CAN controller.
+ * @param  Controller: The CAN controller ID (0 for CAN1, 1 for CAN2).
+ * @param  ControllerModePtr: Pointer to store the current mode of the controller.
+ * @retval E_OK if successful, E_NOT_OK if there is an error or invalid controller.
+ */
+Std_ReturnType Can_GetControllerMode(uint8 Controller, Can_ControllerStateType *ControllerModePtr)
+{
+    CAN_TypeDef *CANx = NULL; /**< Declare pointer for CAN controller */
+
+    /* Check if the ControllerModePtr is valid */
+    if (ControllerModePtr == NULL)
+    {
+        return E_NOT_OK; /**< Invalid pointer, return error */
+    }
+
+    /* Select the appropriate CAN controller based on the Controller parameter */
+    if (Controller == 0)
+    {
+        CANx = CAN1; /**< CAN1 selected */
+    }
+    else if (Controller == 1)
+    {
+        CANx = CAN2; /**< CAN2 selected */
+    }
+    else
+    {
+        return E_NOT_OK; /**< Invalid controller ID, return error */
+    }
+
+    /* Check the current mode of the selected CAN controller */
+    if (CANx->MCR & CAN_MCR_INRQ) /**< Initialization request flag */
+    {
+        *ControllerModePtr = CAN_CS_UNINIT; /**< Controller is uninitialized */
+    }
+    else if (CANx->MSR & CAN_MSR_SLAK) /**< Sleep acknowledge flag */
+    {
+        *ControllerModePtr = CAN_CS_SLEEP; /**< Controller is in sleep mode */
+    }
+    else if (CANx->MSR & CAN_MSR_TXM) /**< Transmit mode flag */
+    {
+        *ControllerModePtr = CAN_CS_STARTED; /**< Controller is operational */
+    }
+    else
+    {
+        *ControllerModePtr = CAN_CS_STOPPED; /**< Controller is stopped */
+    }
+
+    return E_OK; /**< Return success */
+}
+
+/**
+ * @brief  Get the Receive Error Counter for the specified CAN controller.
+ * @param  ControllerId: The CAN controller ID (0 for CAN1, 1 for CAN2).
+ * @param  RxErrorCounterPtr: Pointer to store the Receive Error Counter value.
+ * @retval E_OK if successful, E_NOT_OK if there is an error or invalid controller.
+ */
+Std_ReturnType Can_GetControllerRxErrorCounter(uint8 ControllerId, uint8 *RxErrorCounterPtr)
+{
+    CAN_TypeDef *CANx = NULL; /**< Declare pointer for CAN controller */
+
+    /* Check if the RxErrorCounterPtr is valid */
+    if (RxErrorCounterPtr == NULL)
+    {
+        return E_NOT_OK; /**< Invalid pointer, return error */
+    }
+
+    /* Select the appropriate CAN controller based on the ControllerId */
+    if (ControllerId == 0)
+    {
+        CANx = CAN1; /**< CAN1 selected */
+    }
+    else if (ControllerId == 1)
+    {
+        CANx = CAN2; /**< CAN2 selected */
+    }
+    else
+    {
+        return E_NOT_OK; /**< Invalid controller ID, return error */
+    }
+
+    /* Read the receive error counter (REC) from ESR register */
+    *RxErrorCounterPtr = (uint8)((CANx->ESR & CAN_ESR_REC) >> 24); /**< Mask and shift to get REC-Bits 31:24 */
+
+    return E_OK; /**< Return success */
+}
+
+Std_ReturnType Can_GetControllerTxErrorCounter(uint8 ControllerId, uint8 *TxErrorCounterPtr)
+{
+    CAN_TypeDef *CANx = NULL; /**< Declare pointer for CAN controller */
+
+    /* Check if the TxErrorCounterPtr is valid */
+    if (TxErrorCounterPtr == NULL)
+    {
+        return E_NOT_OK; /**< Invalid pointer, return error */
+    }
+
+    /* Select the appropriate CAN controller based on the ControllerId */
+    if (ControllerId == 0)
+    {
+        CANx = CAN1; /**< CAN1 selected */
+    }
+    else if (ControllerId == 1)
+    {
+        CANx = CAN2; /**< CAN2 selected */
+    }
+    else
+    {
+        return E_NOT_OK; /**< Invalid controller ID, return error */
+    }
+
+    /* Read the transmit error counter (TEC) from ESR register */
+    *TxErrorCounterPtr = (uint8)((CANx->ESR & CAN_ESR_TEC) >> 16); /**< Mask and shift to get TEC-Bits 23:16 */
+
+    return E_OK; /**< Return success */
+}

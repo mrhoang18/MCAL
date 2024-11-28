@@ -122,7 +122,6 @@ typedef enum
  * - `CAN_CS_STOPPED`: The CAN controller is stopped and not participating in communication.
  * - `CAN_CS_SLEEP`: The CAN controller is in sleep mode.
  * 
- * Available via: Can_GeneralTypes.h
  */
 typedef enum 
 {

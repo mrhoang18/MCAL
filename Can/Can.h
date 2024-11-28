@@ -148,4 +148,45 @@ void Can_EnableControllerInterrupts(uint8 Controller);
  */
 Std_ReturnType Can_CheckWakeup(uint8 Controller);
 
+/**
+ * @brief  Retrieves the error state of the specified CAN controller.
+ * @param  ControllerId: The CAN controller ID (0 for CAN1, 1 for CAN2).
+ * @param  ErrorStatePtr: Pointer to store the current error state of the CAN controller.
+ * @retval Std_ReturnType: 
+ *         - E_OK if the error state is successfully retrieved.
+ *         - E_NOT_OK if an error occurred while retrieving the error state.
+ */
+Std_ReturnType Can_GetControllerErrorState(uint8 ControllerId, Can_ErrorStateType *ErrorStatePtr);
+
+/**
+ * @brief  Retrieves the current operational mode of the specified CAN controller.
+ * @param  Controller: The CAN controller to get the mode (0 for CAN1, 1 for CAN2).
+ * @param  ControllerModePtr: Pointer to store the current mode of the CAN controller.
+ * @retval Std_ReturnType: 
+ *         - E_OK if the mode is successfully retrieved.
+ *         - E_NOT_OK if an error occurred while retrieving the mode.
+ */
+Std_ReturnType Can_GetControllerMode(uint8 Controller, Can_ControllerStateType *ControllerModePtr);
+
+/**
+ * @brief  Retrieves the receive error counter value for the specified CAN controller.
+ * @param  ControllerId: The CAN controller ID (0 for CAN1, 1 for CAN2).
+ * @param  RxErrorCounterPtr: Pointer to store the receive error counter value of the CAN controller.
+ * @retval Std_ReturnType: 
+ *         - E_OK if the receive error counter value is successfully retrieved.
+ *         - E_NOT_OK if an error occurred while retrieving the counter value.
+ */
+Std_ReturnType Can_GetControllerRxErrorCounter(uint8 ControllerId, uint8 *RxErrorCounterPtr);
+
+/**
+ * @brief  Retrieves the transmit error counter value for the specified CAN controller.
+ * @param  ControllerId: The CAN controller ID (0 for CAN1, 1 for CAN2).
+ * @param  TxErrorCounterPtr: Pointer to store the transmit error counter value of the CAN controller.
+ * @retval Std_ReturnType: 
+ *         - E_OK if the transmit error counter value is successfully retrieved.
+ *         - E_NOT_OK if an error occurred while retrieving the counter value.
+ */
+Std_ReturnType Can_GetControllerTxErrorCounter(uint8 ControllerId, uint8 *TxErrorCounterPtr);
+
+
 #endif /* CAN_CFG_H */
