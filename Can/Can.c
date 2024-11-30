@@ -1,18 +1,12 @@
-/******************************************************************************
- *  @file    Can.c
- *  @brief   Header file for CAN driver in AUTOSAR communication stack.
- *
- *  @details This file contains the default initialization configuration and
- *           function prototypes for the CAN driver module.
- *
- *           This file is hardware-independent.
- *
- *  @version 1.0
- *  @date    2024-10-10
- *
- *  @section Author
- *           Tong Xuan Hoang
- ******************************************************************************/
+/**********************************************************
+ * @file Can.c
+ * @brief AUTOSAR CAN Driver Source File
+ * @details This file contains the function definitions for
+ *          the CAN driver according to the AUTOSAR standard.
+ * @version 1.0
+ * @date 2024-11-01
+ * @author Tong Xuan Hoang
+ **********************************************************/
 
 #include "Can.h"
 #include "stm32f10x_can.h"

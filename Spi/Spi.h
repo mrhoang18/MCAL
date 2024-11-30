@@ -1,18 +1,12 @@
-/******************************************************************************
- *  @file    Spi.h
- *  @brief   Interface for Serial Peripheral Interface (SPI) functions.
- *
- *  @details This header file provides the function prototypes and necessary
- *           definitions for the Serial Peripheral Interface (SPI) module, allowing
- *           configuration and control of SPI communication as specified by the
- *           AUTOSAR standard.
- *
- *  @version 1.0
- *  @date    2024-10-10
- *
- *  @section Author
- *           Tong Xuan Hoang
- ******************************************************************************/
+/**********************************************************
+ * @file Spi.h
+ * @brief AUTOSAR SPI Driver Header File
+ * @details This file contains the necessary definitions for
+ *          the SPI driver according to the AUTOSAR standard.
+ * @version 1.0
+ * @date 2024-11-01
+ * @author Tong Xuan Hoang
+ **********************************************************/
 
 #ifndef SPI_H
 #define SPI_H

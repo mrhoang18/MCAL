@@ -1,18 +1,12 @@
-/******************************************************************************
- *  @file    Dio.c
- *  @brief   Definition of Digital Input/Output (DIO) control functions.
- *
- *  @details This file contains the implementation of DIO control functions, 
- *           responsible for configuring and controlling the digital pins of 
- *           the microcontroller. The DIO module enables reading and writing 
- *           of digital signals in compliance with the AUTOSAR standard.
- *  
- *  @version 1.0
- *  @date    2024-11-01
- *
- *  @section Author
- *           Tong Xuan Hoang
- ******************************************************************************/
+/**********************************************************
+ * @file Dio.c
+ * @brief AUTOSAR DIO Driver Source File
+ * @details This file contains the function definitions for
+ *          the DIO driver according to the AUTOSAR standard.
+ * @version 1.0
+ * @date 2024-11-01
+ * @author Tong Xuan Hoang
+ **********************************************************/
 
 #include "Dio.h"
 

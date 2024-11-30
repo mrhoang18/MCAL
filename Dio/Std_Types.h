@@ -8,11 +8,9 @@
  *           codes and return types used across various modules in the AUTOSAR 
  *           architecture.
  *  
- *  @version 1.0
- *  @date    2024-10-10
- *
- *  @section Author
- *           Tong Xuan Hoang
+ * @version 1.0
+ * @date 2024-11-01
+ * @author Tong Xuan Hoang
  ******************************************************************************/
 
 #ifndef STD_TYPES_H

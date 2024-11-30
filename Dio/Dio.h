@@ -1,18 +1,12 @@
-/******************************************************************************
- *  @file    Dio.h
- *  @brief   Interface for Digital Input/Output (DIO) functions.
- *
- *  @details This header file provides the function prototypes and necessary 
- *           definitions for the Digital Input/Output (DIO) module, allowing 
- *           configuration and control of digital pins as specified by the 
- *           AUTOSAR standard.
- *  
- *  @version 1.0
- *  @date    2024-10-10
- *
- *  @section Author
- *           Tong Xuan Hoang
- ******************************************************************************/
+/**********************************************************
+ * @file Dio.h
+ * @brief AUTOSAR DIO Driver Header File
+ * @details This file contains the necessary definitions for
+ *          the DIO driver according to the AUTOSAR standard.
+ * @version 1.0
+ * @date 2024-11-01
+ * @author Tong Xuan Hoang
+ **********************************************************/
 
 #ifndef DIO_H
 #define DIO_H

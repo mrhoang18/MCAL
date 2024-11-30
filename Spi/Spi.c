@@ -1,18 +1,12 @@
-/******************************************************************************
- *  @file    Spi.c
- *  @brief   Definition of Serial Peripheral Interface (SPI) control functions.
- *
- *  @details This file contains the implementation of SPI control functions,
- *           responsible for configuring and controlling the SPI communication
- *           of the microcontroller. The SPI module enables serial data
- *           transmission in compliance with the AUTOSAR standard.
- *
- *  @version 1.0
- *  @date    2024-11-01
- *
- *  @section Author
- *           Tong Xuan Hoang
- ******************************************************************************/
+/**********************************************************
+ * @file Spi.c
+ * @brief AUTOSAR SPI Driver Source File
+ * @details This file contains the function definitions for
+ *          the SPI driver according to the AUTOSAR standard.
+ * @version 1.0
+ * @date 2024-11-01
+ * @author Tong Xuan Hoang
+ **********************************************************/
 
 #include "stm32f10x.h"
 #include "stm32f10x_spi.h"
