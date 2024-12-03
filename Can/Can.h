@@ -13,23 +13,27 @@
 
 #include "Can_GeneralTypes.h"
 #include "ComStack_Types.h"
-#include "stm32f10x.h"
-#include "stm32f10x_can.h"
-#include "stm32f10x_gpio.h"  
+#include "stm32f10x.h"      /**< Header from the Standard Peripheral Library for STM32F103C8T6 */
+#include "stm32f10x_can.h"  /**< CAN header from the Standard Peripheral Library for STM32F103C8T6 */
+#include "stm32f10x_gpio.h" /**< GPIO Header from the Standard Peripheral Library for STM32F103C8T6 */     
 
-/**
- * @file Can_Cfg.h
- * @brief CAN configuration header file for STM32F103C8T6.
- * 
- * This file contains the configuration settings for the CAN controller
- * as required by AUTOSAR standards.
- */
+#ifdef __cplusplus
+extern "C"{
+#endif
+
+/*==============================================================================
+ *                              MACROS                                         *
+ ==============================================================================*/
 
 /* Pre-compile time parameter settings */
 #define CAN_DEV_ERROR_DETECT        STD_ON  /**< Enable Development Error Detection */
 #define CAN_VERSION_INFO_API        STD_OFF /**< Disable version info API */
 #define CAN_MAX_CONTROLLERS         1       /**< Number of CAN controllers supported */
 
+/*==============================================================================
+ *                          TYPE DEFINITIONS                                   *
+ ==============================================================================*/
+ 
 /**
  * @struct Can_ConfigType
  * @brief Configuration structure for CAN driver with nested structures.
@@ -88,9 +92,9 @@ typedef struct
  */
 extern Can_ConfigType Can_ConfigData;
 
-/*==================================================================================================
- *  FUNCTION DECLARATIONS
- *==================================================================================================*/
+/*==============================================================================
+ *                           FUNCTION PROTOTYPES                               *
+ ==============================================================================*/
 
 /**
  * @brief  Initializes the CAN controller with the specified configuration.
@@ -182,5 +186,8 @@ Std_ReturnType Can_GetControllerRxErrorCounter(uint8 ControllerId, uint8 *RxErro
  */
 Std_ReturnType Can_GetControllerTxErrorCounter(uint8 ControllerId, uint8 *TxErrorCounterPtr);
 
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* CAN_CFG_H */

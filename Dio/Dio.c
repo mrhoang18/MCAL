@@ -9,7 +9,6 @@
  **********************************************************/
 
 #include "Dio.h"
-#include "stm32f10x_gpio.h"
 
 /***********************************************************
  * @brief  Reads the signal level (HIGH or LOW) of a specified GPIO pin.
@@ -31,8 +30,8 @@ Dio_LevelType Dio_ReadChannel(Dio_ChannelType ChannelId)
     Dio_LevelType level = STD_LOW;
 
     /* Extract port and pin from ChannelId */
-    uint8 port = ChannelId / 16; // Determine port number
-    uint8 pin = ChannelId % 16;  // Determine pin within port
+    uint8 port = ChannelId / 16; /**< Determine port number */
+    uint8 pin = ChannelId % 16;  /**< Determine pin number */
 
     /* Determine GPIOx based on port number */
     switch (port)
@@ -47,11 +46,11 @@ Dio_LevelType Dio_ReadChannel(Dio_ChannelType ChannelId)
         GPIOx = GPIOC;
         break;
     default:
-        return STD_LOW; // Return LOW if port is invalid
+        return STD_LOW;  /**< Return LOW if port is invalid */
     }
 
     /* Convert pin to SPL format */
-    GPIO_Pin = (1 << pin); // Shift to match SPL's GPIO_Pin_x format
+    GPIO_Pin = (1 << pin); /**< Shift to match SPL's GPIO_Pin_x format */
 
     /* Read the pin level */
     if (GPIO_ReadInputDataBit(GPIOx, GPIO_Pin) == Bit_SET)
@@ -87,8 +86,8 @@ void Dio_WriteChannel(Dio_ChannelType ChannelId, Dio_LevelType Level)
     uint16_t GPIO_Pin;
 
     /* Convert ChannelId into port and pin */
-    uint8 port = ChannelId / 16; // Calculate GPIO port from ChannelId
-    uint8 pin = ChannelId % 16;  // Calculate pin within the port
+    uint8 port = ChannelId / 16; /**< Determine port number */
+    uint8 pin = ChannelId % 16;  /**< Determine pin number */
 
     /* Determine GPIOx and GPIO_Pin based on port and pin */
     switch (port)
@@ -103,7 +102,7 @@ void Dio_WriteChannel(Dio_ChannelType ChannelId, Dio_LevelType Level)
         GPIOx = GPIOC;
         break;
     default:
-        return; // Exit if port is invalid
+        return; /**< Exit if port is invalid */
     }
 
     /* Convert pin to SPL format */
@@ -112,11 +111,11 @@ void Dio_WriteChannel(Dio_ChannelType ChannelId, Dio_LevelType Level)
     /* Write the signal level to the pin */
     if (Level == STD_HIGH)
     {
-        GPIO_SetBits(GPIOx, GPIO_Pin); // Set pin to high level
+        GPIO_SetBits(GPIOx, GPIO_Pin); /**< Set pin to high level */
     }
     else
     {
-        GPIO_ResetBits(GPIOx, GPIO_Pin); // Set pin to low level
+        GPIO_ResetBits(GPIOx, GPIO_Pin); /**< Set pin to low level */
     }
 }
 
@@ -154,7 +153,7 @@ Dio_PortLevelType Dio_ReadPort(Dio_PortType PortId)
         GPIOx = GPIOC;
         break;
     default:
-        return 0; // Return 0 if PortId is invalid
+        return 0; /**< Return 0 if PortId is invalid */
     }
 
     /* Read the level of all pins in the port */
@@ -193,7 +192,7 @@ void Dio_WritePort(Dio_PortType PortId, Dio_PortLevelType Level)
         GPIOx = GPIOC;
         break;
     default:
-        return; // Exit if PortId is invalid
+        return 0; /**< Exit if PortId is invalid */
     }
 
     /* Write the Level to the GPIO port */
@@ -228,9 +227,8 @@ Dio_PortLevelType Dio_ReadChannelGroup(const Dio_ChannelGroupType *ChannelGroupI
     case 2:
         GPIOx = GPIOC;
         break;
-    // Add more cases if additional ports are needed
     default:
-        return 0; // Return 0 if the port is invalid
+        return 0; /**< Return 0 if the port is invalid */
     }
 
     /* Read data from the GPIO port */
@@ -270,19 +268,18 @@ void Dio_WriteChannelGroup(const Dio_ChannelGroupType *ChannelGroupIdPtr, Dio_Po
     case 2:
         GPIOx = GPIOC;
         break;
-    // Add additional cases if there are more ports
     default:
-        return; // Exit if port is invalid
+        return; /**< Exit if port is invalid */
     }
 
     /* Read the current value of the GPIO port */
     uint32_t portValue = GPIO_ReadOutputData(GPIOx);
 
     /* Clear the bits of the specified group in the port */
-    portValue &= ~(ChannelGroupIdPtr->mask); // Clear bits in the group using the mask
+    portValue &= ~(ChannelGroupIdPtr->mask); /**< Clear bits in the group using the mask */
 
     /* Set the new level for the group of pins */
-    portValue |= ((Level << ChannelGroupIdPtr->offset) & ChannelGroupIdPtr->mask); // Shift Level by offset and apply mask
+    portValue |= ((Level << ChannelGroupIdPtr->offset) & ChannelGroupIdPtr->mask); /**< Shift Level by offset and apply mask */
 
     /* Write the updated value back to the GPIO port */
     GPIO_Write(GPIOx, (uint16_t)portValue);

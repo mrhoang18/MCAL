@@ -80,12 +80,12 @@ extern "C"{
  * @brief Type definition for Dio_ChannelType, representing a channel ID 
  *        used in Digital I/O (DIO) operations in AUTOSAR.
  * 
- *        This type specifies digital input/output channels on the STM32F103C8T6 
- *        microcontroller. The values correspond to GPIO pin numbers as follows:
- * 
- *        Dio_ChannelType channelId = x;  // GPIO Pin x (e.g., PAx, PBx)
- * 
- *        Where x ranges from 0 to 15, representing the GPIO pins PA0-PA15 or PB0-PB15.
+ * @details This type specifies digital input/output channels on the STM32F103C8T6 
+ *          microcontroller. The values correspond to GPIO pin numbers as follows:
+ *          
+ *          Dio_ChannelType channelId = x;  // GPIO Pin x (e.g., PAx, PBx)
+ *          
+ *          Where x ranges from 0 to 15, representing the GPIO pins PA0-PA15 or PB0-PB15.
  **********************************************************/
 typedef uint8 Dio_ChannelType;
 
@@ -94,13 +94,13 @@ typedef uint8 Dio_ChannelType;
  * @brief Type definition for Dio_PortType, representing a port ID 
  *        used in Digital I/O (DIO) operations in AUTOSAR.
  * 
- *        This type specifies digital input/output ports on the STM32F103C8T6 
- *        microcontroller. The values correspond to the GPIO port numbers as follows:
+ * @details This type specifies digital input/output ports on the STM32F103C8T6 
+ *          microcontroller. The values correspond to the GPIO port numbers as follows:
  * 
- *        Dio_PortType portId = x;  // GPIO Port x (e.g., 0 for Port A, 1 for Port B)
+ *          Dio_PortType portId = x;  // GPIO Port x (e.g., 0 for Port A, 1 for Port B)
  * 
- *        Where x is a number representing the GPIO port, such as 0 for Port A, 
- *        1 for Port B, etc.
+ *          Where x is a number representing the GPIO port, such as 0 for Port A, 
+ *          1 for Port B, etc.
  **********************************************************/
 typedef uint16 Dio_PortType;
 
@@ -109,16 +109,16 @@ typedef uint16 Dio_PortType;
  * @brief Type definition for Dio_ChannelGroupType, representing a group of 
  *        channels in Digital I/O (DIO) operations in AUTOSAR.
  * 
- *        This type defines a channel group, which includes:
- *        - A mask that specifies the positions of the channels in the group.
- *        - An offset indicating the position of the group from the least significant bit (LSB).
- *        - The port ID (as a number) to which the channel group belongs.
+ * @details This type defines a channel group, which includes:
+ *          - A mask that specifies the positions of the channels in the group.
+ *          - An offset indicating the position of the group from the least significant bit (LSB).
+ *          - The port ID (as a number) to which the channel group belongs.
  * 
- *        Example: A group of channels with mask 0x0000000F, starting at LSB, 
- *        and assigned to Port A (Port ID = 0):
- *        Dio_ChannelGroupType group = {0x0000000F, 0, 0};  
- *        // mask = 0x0000000F (positions of channels in the group), offset = 0 
- *        // (starting from LSB), port = 0 (Port A)
+ *          Example: A group of channels with mask 0x0000000F, starting at LSB, 
+ *          and assigned to Port A (Port ID = 0):
+ *          Dio_ChannelGroupType group = {0x0000000F, 0, 0};  
+ *          // mask = 0x0000000F (positions of channels in the group), offset = 0 
+ *          // (starting from LSB), port = 0 (Port A)
  **********************************************************/
 typedef struct
 {
@@ -133,16 +133,16 @@ typedef struct
  *        digital level (high or low) used in Digital I/O (DIO) 
  *        operations in AUTOSAR.
  * 
- *        This type defines the possible levels for digital 
- *        input/output channels. The values typically correspond 
- *        to high (1) and low (0) logic levels.
+ * @details This type defines the possible levels for digital 
+ *          input/output channels. The values typically correspond 
+ *          to high (1) and low (0) logic levels.
  * 
- *        Dio_LevelType level = STD_HIGH;  // Represents a high logic level (1)
- *        Dio_LevelType level = STD_LOW;   // Represents a low logic level (0)
+ *          Dio_LevelType level = STD_HIGH;  // Represents a high logic level (1)
+ *          Dio_LevelType level = STD_LOW;   // Represents a low logic level (0)
  * 
- *        Where:
- *        STD_HIGH = 1,  // Represents the high level (1)
- *        STD_LOW  = 0   // Represents the low level (0)
+ *          Where:
+ *          STD_HIGH = 1,  // Represents the high level (1)
+ *          STD_LOW  = 0   // Represents the low level (0)
  **********************************************************/
 typedef uint8 Dio_LevelType;
 
@@ -152,16 +152,16 @@ typedef uint8 Dio_LevelType;
  *        the digital level (high or low) for a group of digital I/O 
  *        ports in AUTOSAR.
  * 
- *        This type defines the possible levels for multiple digital 
- *        input/output channels (ports). The values correspond to 
- *        the logic levels (high or low) across all pins within a 
- *        port, typically represented as a 16-bit value.
+ * @details This type defines the possible levels for multiple digital 
+ *          input/output channels (ports). The values correspond to 
+ *          the logic levels (high or low) across all pins within a 
+ *          port, typically represented as a 16-bit value.
  * 
- *        Dio_PortLevelType portLevel = 0b1111111111111111;  // All pins in the port at high level (1)
- *        Dio_PortLevelType portLevel = 0b0000000000000000;  // All pins in the port at low level (0)
+ *          Dio_PortLevelType portLevel = 0b1111111111111111;  // All pins in the port at high level (1)
+ *          Dio_PortLevelType portLevel = 0b0000000000000000;  // All pins in the port at low level (0)
  * 
- *        Where each bit in the 16-bit value represents the level 
- *        of a corresponding pin in the port (1 for high, 0 for low).
+ *          Where each bit in the 16-bit value represents the level 
+ *          of a corresponding pin in the port (1 for high, 0 for low).
  **********************************************************/
 typedef uint16 Dio_PortLevelType;
 

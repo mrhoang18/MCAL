@@ -1,13 +1,10 @@
 /******************************************************************************
  *  @file    Can_GeneralTypes.h
  *  @brief   Defines general types for the CAN module.
- *
  *  @details This file contains the type definitions and constants used by the 
  *           CAN driver and related modules.
- *
  *  @version 1.0
  *  @date    2024-10-10
- *
  *  @section Author
  *           Tong Xuan Hoang
  ******************************************************************************/
@@ -15,16 +12,16 @@
 #ifndef CAN_GENERAL_TYPES_H
 #define CAN_GENERAL_TYPES_H
 
-/*==================================================================================================
- *  INCLUDES
- *==================================================================================================*/
-
-/* Include standard types like uint32 */
 #include "Std_Types.h"
 #include "ComStack_Types.h"
-/*==================================================================================================
- *  TYPE DEFINITIONS
- *==================================================================================================*/
+
+#ifdef __cplusplus
+extern "C"{
+#endif
+
+/*==============================================================================
+ *                          TYPE DEFINITIONS                                   *
+ ==============================================================================*/
 
 /**
  * @brief Identifier for a CAN L-PDU.
@@ -57,5 +54,9 @@ typedef struct
     Can_IdType id;          /**< CAN identifier (Standard or Extended). */
     uint8* sdu;             /**< Pointer to the payload data. */
 } Can_PduType;
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* CAN_GENERAL_TYPES_H */

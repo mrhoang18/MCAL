@@ -8,8 +8,6 @@
  * @author Tong Xuan Hoang
  **********************************************************/
 
-#include "stm32f10x.h"
-#include "stm32f10x_spi.h"
 #include "Spi.h"
 #include "Spi_Cfg.h"
 
@@ -65,15 +63,14 @@ static Spi_JobResultType Spi_JobStatus[SPI_MAX_JOB] = {SPI_JOB_PENDING, SPI_JOB_
 /**
  * @brief Initializes the SPI driver with specified settings.
  * @param ConfigPtr: Pointer to SPI configuration (Spi_ConfigType).
- *                   If NULL, function exits without action.
- * @retval None
+ * @return None
  * @note Configures GPIO pins for:
  *       - SPI1: SCK (PA5), MISO (PA6), MOSI (PA7), optional NSS (PA4).
  *       - SPI2: SCK (PB13), MISO (PB14), MOSI (PB15), optional NSS (PB12).
  */
 void Spi_Init(const Spi_ConfigType *ConfigPtr)
 {
-    // Check if the ConfigPtr pointer is NULL
+    /* If NULL, function exits without action */
     if (ConfigPtr == NULL)
     {
         return;
@@ -83,59 +80,57 @@ void Spi_Init(const Spi_ConfigType *ConfigPtr)
     GPIO_InitTypeDef GPIO_InitStructure;
     SPI_TypeDef *SPIx;
 
-    // 1. Determine which SPI peripheral and GPIO settings to use based on the channel
+    /* Determine which SPI peripheral and GPIO settings to use based on the channel */
     if (ConfigPtr->Channel == SPI_CHANNEL_1)
     {
-        // Update status of channel SPI1
+        /* Update status of channel SPI1 */ 
         Spi_Status[SPI_CHANNEL_1] = SPI_IDLE;
 
         SPIx = SPI1;
 
-        // Enable clocks for SPI1 and GPIOA (SPI1 uses GPIOA pins)
+        /* Enable clocks for SPI1 and GPIOA (SPI1 uses GPIOA pins) */
         RCC_APB2PeriphClockCmd(RCC_APB2Periph_SPI1 | RCC_APB2Periph_GPIOA, ENABLE);
 
-        // Configure GPIO for SPI1
-        // SCK (PA5), MISO (PA6), MOSI (PA7)
+        /* Configure GPIO for SPI1, SCK (PA5), MISO (PA6), MOSI (PA7) */
         GPIO_InitStructure.GPIO_Pin = GPIO_Pin_5 | GPIO_Pin_6 | GPIO_Pin_7;
         GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
-        GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AF_PP; // Alternate function push-pull for SCK and MOSI
+        GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AF_PP;
         GPIO_Init(GPIOA, &GPIO_InitStructure);
 
-        // Configure NSS (optional, PA4)
+        /* Configure NSS (optional, PA4) */
         GPIO_InitStructure.GPIO_Pin = GPIO_Pin_4;
         GPIO_InitStructure.GPIO_Mode = (ConfigPtr->NSS == SPI_NSS_SOFT) ? GPIO_Mode_Out_PP : GPIO_Mode_AF_PP;
         GPIO_Init(GPIOA, &GPIO_InitStructure);
     }
     else if (ConfigPtr->Channel == SPI_CHANNEL_2)
     {
-        // Update status of channel SPI1
+        /* Update status of channel SPI1 */
         Spi_Status[SPI_CHANNEL_2] = SPI_IDLE;
 
         SPIx = SPI2;
 
-        // Enable clocks for SPI2 and GPIOB (SPI2 uses GPIOB pins)
+        /* Enable clocks for SPI2 and GPIOB (SPI2 uses GPIOB pins) */
         RCC_APB1PeriphClockCmd(RCC_APB1Periph_SPI2, ENABLE);
         RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOB, ENABLE);
 
-        // Configure GPIO for SPI2
-        // SCK (PB13), MISO (PB14), MOSI (PB15)
+        /* Configure GPIO for SPI2, SCK (PB13), MISO (PB14), MOSI (PB15) */
         GPIO_InitStructure.GPIO_Pin = GPIO_Pin_13 | GPIO_Pin_14 | GPIO_Pin_15;
         GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
-        GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AF_PP; // Alternate function push-pull for SCK and MOSI
+        GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AF_PP;
         GPIO_Init(GPIOB, &GPIO_InitStructure);
 
-        // Configure NSS (optional, PB12)
+        /* Configure NSS (optional, PB12) */
         GPIO_InitStructure.GPIO_Pin = GPIO_Pin_12;
         GPIO_InitStructure.GPIO_Mode = (ConfigPtr->NSS == SPI_NSS_SOFT) ? GPIO_Mode_Out_PP : GPIO_Mode_AF_PP;
         GPIO_Init(GPIOB, &GPIO_InitStructure);
     }
     else
     {
-        // Invalid channel: handle error or return if necessary
+        /* Invalid channel: handle error or return if necessary */
         return;
     }
 
-    // 2. Configure SPI settings based on ConfigPtr
+    /* Configure SPI settings based on ConfigPtr */
     SPI_InitStructure.SPI_BaudRatePrescaler = ConfigPtr->BaudRate;
     SPI_InitStructure.SPI_CPOL = ConfigPtr->CPOL;
     SPI_InitStructure.SPI_CPHA = ConfigPtr->CPHA;
@@ -144,10 +139,10 @@ void Spi_Init(const Spi_ConfigType *ConfigPtr)
     SPI_InitStructure.SPI_DataSize = ConfigPtr->DataSize;
     SPI_InitStructure.SPI_Direction = ConfigPtr->Direction;
 
-    // 4. Initialize SPI with the specified settings
+    /* Initialize SPI with the specified settings */
     SPI_Init(SPIx, &SPI_InitStructure);
 
-    // 5. Enable the SPI peripheral
+    /* Enable the SPI peripheral */ 
     SPI_Cmd(SPIx, ENABLE);
 }
 
@@ -159,40 +154,40 @@ void Spi_Init(const Spi_ConfigType *ConfigPtr)
  */
 Std_ReturnType Spi_DeInit(void)
 {
-    // Update status of channel SPI1, SPI2
+    /* Update status of channel SPI1, SPI2 */
     Spi_Status[SPI_CHANNEL_1] = SPI_UNINIT;
     Spi_Status[SPI_CHANNEL_2] = SPI_UNINIT;
 
     GPIO_InitTypeDef GPIO_InitStructure;
 
-    // 1. Disable both SPI peripherals
+    /* Disable both SPI peripherals */
     SPI_Cmd(SPI1, DISABLE);
     SPI_Cmd(SPI2, DISABLE);
 
-    // 2. Reset SPI1 and SPI2 registers by disabling their peripheral clocks
+    /* Reset SPI1 and SPI2 registers by disabling their peripheral clocks */
     RCC_APB2PeriphClockCmd(RCC_APB2Periph_SPI1, DISABLE);
     RCC_APB1PeriphClockCmd(RCC_APB1Periph_SPI2, DISABLE);
 
-    // 3. De-initialize GPIO pins for SPI1 (PA4, PA5, PA6, PA7)
-    RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOA, ENABLE); // Enable clock temporarily for GPIO configuration
+    /* De-initialize GPIO pins for SPI1 (PA4, PA5, PA6, PA7) */
+    RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOA, ENABLE);
     GPIO_InitStructure.GPIO_Pin = GPIO_Pin_4 | GPIO_Pin_5 | GPIO_Pin_6 | GPIO_Pin_7;
-    GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IN_FLOATING; // Set to default mode (input floating)
+    GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IN_FLOATING;   /**< Default state after reset */
     GPIO_Init(GPIOA, &GPIO_InitStructure);
 
-    // 4. De-initialize GPIO pins for SPI2 (PB12, PB13, PB14, PB15)
-    RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOB, ENABLE); // Enable clock temporarily for GPIO configuration
+    /* De-initialize GPIO pins for SPI2 (PB12, PB13, PB14, PB15) */
+    RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOB, ENABLE);
     GPIO_InitStructure.GPIO_Pin = GPIO_Pin_12 | GPIO_Pin_13 | GPIO_Pin_14 | GPIO_Pin_15;
-    GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IN_FLOATING; // Default state after reset
+    GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IN_FLOATING;   /**< Default state after reset */
     GPIO_Init(GPIOB, &GPIO_InitStructure);
 
-    // 5. Check if both SPI peripherals have been disabled
+    /* Check if both SPI peripherals have been disabled */
     if ((SPI1->CR1 & SPI_CR1_SPE) == 0 && (SPI2->CR1 & SPI_CR1_SPE) == 0)
     {
-        return E_OK; // De-initialization successful for both SPI1 and SPI2
+        return E_OK; /**< De-initialization successful for both SPI1 and SPI2 */
     }
     else
     {
-        return E_NOT_OK; // De-initialization failed for at least one SPI channel
+        return E_NOT_OK; /**< De-initialization failed for at least one SPI channel */
     }
 }
 
@@ -207,13 +202,13 @@ Std_ReturnType Spi_DeInit(void)
  */
 Std_ReturnType Spi_WriteIB(Spi_ChannelType Channel, const Spi_DataBufferType *DataBufferPtr)
 {
-    // Check if the data buffer pointer is NULL
+    /* Check if the data buffer pointer is NULL */
     if (DataBufferPtr == NULL)
     {
-        return E_NOT_OK; // Return error if no data buffer is provided
+        return E_NOT_OK; /**< Return error if no data buffer is provided */
     }
 
-    // Determine the SPI peripheral based on the channel
+    /* Determine the SPI peripheral based on the channel */
     SPI_TypeDef *SPIx;
     if (Channel == SPI_CHANNEL_1)
     {
@@ -225,19 +220,17 @@ Std_ReturnType Spi_WriteIB(Spi_ChannelType Channel, const Spi_DataBufferType *Da
     }
     else
     {
-        return E_NOT_OK; // Invalid channel
+        return E_NOT_OK; /**< Invalid channel */
     }
 
-    // Wait until the transmit buffer is empty
-    while (SPI_I2S_GetFlagStatus(SPIx, SPI_I2S_FLAG_TXE) == RESET)
-        ;
+    /* Wait until the transmit buffer is empty */
+    while (SPI_I2S_GetFlagStatus(SPIx, SPI_I2S_FLAG_TXE) == RESET);
 
-    // Write the single 8-bit data from DataBufferPtr to the SPI Data Register
+    /* Write the single 8-bit data from DataBufferPtr to the SPI Data Register */
     SPI_I2S_SendData(SPIx, *DataBufferPtr);
 
-    // Wait until the transmission is complete
-    while (SPI_I2S_GetFlagStatus(SPIx, SPI_I2S_FLAG_BSY) == SET)
-        ;
+    /* Wait until the transmission is complete */
+    while (SPI_I2S_GetFlagStatus(SPIx, SPI_I2S_FLAG_BSY) == SET);
 
     return E_OK;
 }
@@ -252,8 +245,6 @@ Std_ReturnType Spi_WriteIB(Spi_ChannelType Channel, const Spi_DataBufferType *Da
  *         for the transmission to complete. The status of the transmission
  *         should be checked later to confirm its success.
  */
-
-// Spi_AsyncTransmit Function (Main Functionality)
 Std_ReturnType Spi_AsyncTransmit(Spi_SequenceType Sequence)
 {
     if (Spi_Status[0] == SPI_UNINIT && Spi_Status[1] == SPI_UNINIT)
@@ -280,17 +271,17 @@ Std_ReturnType Spi_AsyncTransmit(Spi_SequenceType Sequence)
 
         if (channel == SPI_CHANNEL_1)
         {
-            // Transmit data on SPI1
-            while (SPI_I2S_GetFlagStatus(SPI1, SPI_I2S_FLAG_TXE) == RESET)
-                ;
+            /* Transmit data on SPI1 */ 
+            while (SPI_I2S_GetFlagStatus(SPI1, SPI_I2S_FLAG_TXE) == RESET);
+
             SPI_I2S_SendData(SPI1, *(JobConfig->DataBuffer));
 
-            // If transmition is successfull
+            /* If transmition is successfull */ 
             if (SPI_I2S_GetFlagStatus(SPI1, SPI_I2S_FLAG_RXNE) != RESET)
             {
                 Spi_JobStatus[currentJob] = SPI_JOB_OK;
             }
-            // If transmition is fail
+            /* If transmition is fail */  
             else
             {
                 Spi_JobStatus[currentJob] = SPI_JOB_FAILED;
@@ -301,17 +292,17 @@ Std_ReturnType Spi_AsyncTransmit(Spi_SequenceType Sequence)
         }
         else if (channel == SPI_CHANNEL_2)
         {
-            // Transmit data on SPI1
-            while (SPI_I2S_GetFlagStatus(SPI2, SPI_I2S_FLAG_TXE) == RESET)
-                ;
-            SPI_I2S_SendData(SPI2, *(JobConfig->DataBuffer)); // Truy?n 8-bit d? li?u
+            /* Transmit data on SPI2 */ 
+            while (SPI_I2S_GetFlagStatus(SPI2, SPI_I2S_FLAG_TXE) == RESET);
 
-            // If transmition is successfull
+            SPI_I2S_SendData(SPI2, *(JobConfig->DataBuffer));
+
+            /* If transmition is successfull */
             if (SPI_I2S_GetFlagStatus(SPI2, SPI_I2S_FLAG_RXNE) != RESET)
             {
                 Spi_JobStatus[currentJob] = SPI_JOB_OK;
             }
-            // If transmition is fall
+            /* If transmition is fail */
             else
             {
                 Spi_JobStatus[currentJob] = SPI_JOB_FAILED;
@@ -319,7 +310,7 @@ Std_ReturnType Spi_AsyncTransmit(Spi_SequenceType Sequence)
                 return E_NOT_OK;
             }
         }
-        // If channel is not available
+        /* If channel is not available */
         else
         {
             Spi_JobStatus[currentJob] = SPI_JOB_FAILED;
@@ -343,13 +334,13 @@ Std_ReturnType Spi_AsyncTransmit(Spi_SequenceType Sequence)
  */
 Std_ReturnType Spi_ReadIB(Spi_ChannelType Channel, Spi_DataBufferType *DataBufferPointer)
 {
-    // Check if the data buffer pointer is NULL
+    /* Check if the data buffer pointer is NULL */
     if (DataBufferPointer == NULL)
     {
-        return E_NOT_OK; // Return error if no data buffer is provided
+        return E_NOT_OK; /**< Return error if no data buffer is provided */
     }
 
-    // Determine the SPI peripheral based on the channel
+    /* Determine the SPI peripheral based on the channel */
     SPI_TypeDef *SPIx;
     if (Channel == SPI_CHANNEL_1)
     {
@@ -361,14 +352,13 @@ Std_ReturnType Spi_ReadIB(Spi_ChannelType Channel, Spi_DataBufferType *DataBuffe
     }
     else
     {
-        return E_NOT_OK; // Invalid channel
+        return E_NOT_OK; /**< Invalid channel */
     }
 
-    // Wait until data is ready to be received
-    while (SPI_I2S_GetFlagStatus(SPIx, SPI_I2S_FLAG_RXNE) == RESET)
-        ;
+    /* Wait until data is ready to be received */
+    while (SPI_I2S_GetFlagStatus(SPIx, SPI_I2S_FLAG_RXNE) == RESET);
 
-    // Read the received data from the SPI Data Register
+    /* Read the received data from the SPI Data Register */
     *DataBufferPointer = (Spi_DataBufferType)SPI_I2S_ReceiveData(SPIx);
 
     return E_OK;
@@ -387,25 +377,25 @@ Std_ReturnType Spi_ReadIB(Spi_ChannelType Channel, Spi_DataBufferType *DataBuffe
  */
 Spi_StatusType Spi_GetStatus(void)
 {
-    // Check if any channel is busy
+    /* Check if any channel is busy */
     for (int i = 0; i < SPI_MAX_CHANNEL; i++)
     {
         if (Spi_Status[i] == SPI_BUSY)
         {
-            return SPI_BUSY; // Return SPI_BUSY if any channel is busy
+            return SPI_BUSY; /**< Return SPI_BUSY if any channel is busy */
         }
     }
 
-    // Check if all channels are uninitialized
+    /* Check if all channels are uninitialized */
     for (int i = 0; i < SPI_MAX_CHANNEL; i++)
     {
         if (Spi_Status[i] != SPI_UNINIT)
         {
-            return SPI_IDLE; // Return SPI_IDLE if at least one channel is initialized
+            return SPI_IDLE; /**< Return SPI_IDLE if at least one channel is initialized */
         }
     }
 
-    // If all channels are uninitialized, return SPI_UNINIT
+    /* If all channels are uninitialized, return SPI_UNINIT */
     return SPI_UNINIT;
 }
 
@@ -455,13 +445,13 @@ Spi_SeqResultType Spi_GetSequenceResult(Spi_SequenceType Sequence)
  */
 void Spi_GetVersionInfo(Std_VersionInfoType *versioninfo)
 {
-    // Check if the versioninfo pointer is NULL
+    /* Check if the versioninfo pointer is NULL */
     if (versioninfo == NULL)
     {
         return;
     }
 
-    // Populate the version information structure
+    /* Populate the version information structure */
     versioninfo->vendorID = SPI_VENDOR_ID;
     versioninfo->moduleID = SPI_MODULE_ID;
     versioninfo->sw_major_version = SPI_SW_MAJOR_VERSION;
@@ -483,47 +473,47 @@ void Spi_GetVersionInfo(Std_VersionInfoType *versioninfo)
  */
 Std_ReturnType Spi_SyncTransmit(Spi_SequenceType Sequence)
 {
-    // Check if SPI is initialized
+    /* Check if SPI is initialized */
     if (Spi_Status[0] == SPI_UNINIT && Spi_Status[1] == SPI_UNINIT)
     {
         return E_NOT_OK;
     }
 
-    // Check if the Sequence ID is valid
+    /* Check if the Sequence ID is valid */
     if (Sequence >= SPI_MAX_CHANNEL)
     {
         return E_NOT_OK;
     }
 
-    // Set the sequence status to PENDING at the beginning
+    /* Set the sequence status to PENDING at the beginning */
     Spi_SequenceStatus[Sequence] = SPI_SEQ_PENDING;
     const Spi_SequenceConfigType *SequenceConfig = &Spi_Sequences[Sequence];
 
-    // Process each job in the sequence
+    /* Process each job in the sequence */
     for (uint8_t jobIndex = 0; jobIndex < SequenceConfig->JobCount; jobIndex++)
     {
         Spi_JobType currentJob = SequenceConfig->Jobs[jobIndex];
         const Spi_JobConfigType *JobConfig = &Spi_Jobs[currentJob];
         Spi_ChannelType channel = JobConfig->Channel;
 
-        // Set the job status to PENDING at the start of the job
+        /* Set the job status to PENDING at the start of the job */
         Spi_JobStatus[currentJob] = SPI_JOB_PENDING;
 
         if (channel == SPI_CHANNEL_1)
         {
-            // Transmit data on SPI1
-            while (SPI_I2S_GetFlagStatus(SPI1, SPI_I2S_FLAG_TXE) == RESET)
-                ;
+            /* Transmit data on SPI1 */
+            while (SPI_I2S_GetFlagStatus(SPI1, SPI_I2S_FLAG_TXE) == RESET);
+
             SPI_I2S_SendData(SPI1, *(JobConfig->DataBuffer));
 
-            // Check if transmission was successful
+            /* Check if transmission was successful */
             if (SPI_I2S_GetFlagStatus(SPI1, SPI_I2S_FLAG_RXNE) != RESET)
             {
                 Spi_JobStatus[currentJob] = SPI_JOB_OK;
             }
             else
             {
-                // If transmission failed
+                /* If transmission failed */
                 Spi_JobStatus[currentJob] = SPI_JOB_FAILED;
                 Spi_SequenceStatus[Sequence] = SPI_SEQ_FAILED;
                 return E_NOT_OK;
@@ -531,19 +521,19 @@ Std_ReturnType Spi_SyncTransmit(Spi_SequenceType Sequence)
         }
         else if (channel == SPI_CHANNEL_2)
         {
-            // Transmit data on SPI2
-            while (SPI_I2S_GetFlagStatus(SPI2, SPI_I2S_FLAG_TXE) == RESET)
-                ;
+            /* Transmit data on SPI2 */
+            while (SPI_I2S_GetFlagStatus(SPI2, SPI_I2S_FLAG_TXE) == RESET);
+
             SPI_I2S_SendData(SPI2, *(JobConfig->DataBuffer));
 
-            // Check if transmission was successful
+            /* Check if transmission was successful */
             if (SPI_I2S_GetFlagStatus(SPI2, SPI_I2S_FLAG_RXNE) != RESET)
             {
                 Spi_JobStatus[currentJob] = SPI_JOB_OK;
             }
             else
             {
-                // If transmission failed
+                /* If transmission failed */
                 Spi_JobStatus[currentJob] = SPI_JOB_FAILED;
                 Spi_SequenceStatus[Sequence] = SPI_SEQ_FAILED;
                 return E_NOT_OK;
@@ -551,14 +541,14 @@ Std_ReturnType Spi_SyncTransmit(Spi_SequenceType Sequence)
         }
         else
         {
-            // Invalid channel
+            /* Invalid channel */
             Spi_JobStatus[currentJob] = SPI_JOB_FAILED;
             Spi_SequenceStatus[Sequence] = SPI_SEQ_FAILED;
             return E_NOT_OK;
         }
     }
 
-    // If all jobs were processed successfully, set sequence status to OK
+    /* If all jobs were processed successfully, set sequence status to OK */
     Spi_SequenceStatus[Sequence] = SPI_SEQ_OK;
     return E_OK;
 }

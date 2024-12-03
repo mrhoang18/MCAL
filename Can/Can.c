@@ -9,7 +9,6 @@
  **********************************************************/
 
 #include "Can.h"
-#include "stm32f10x_can.h"
 
 /**
  * @var Can_ConfigData
